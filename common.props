@@ -1,14 +1,14 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.10.2</Version>
+    <Version>1.10.3-dev</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>EasyAbp Team</Authors>
     <Description>An abp application module that provides payment service.</Description>
     <PackageIconUrl>https://avatars3.githubusercontent.com/u/58311641?s=128</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/EasyAbp/PaymentService</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/EasyAbp/PaymentService</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/yuansicloud/PaymentService</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yuansicloud/PaymentService</RepositoryUrl>
     <PackageTags>abp module easyabp paymentservice payment</PackageTags>
     <Company>EasyAbp</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
