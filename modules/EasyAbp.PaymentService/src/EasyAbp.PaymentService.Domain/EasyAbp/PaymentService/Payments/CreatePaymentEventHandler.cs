@@ -35,37 +35,41 @@ namespace EasyAbp.PaymentService.Payments
         [UnitOfWork(true)]
         public virtual async Task HandleEventAsync(CreatePaymentEto eventData)
         {
-            using var changeTenant = _currentTenant.Change(eventData.TenantId);
+            try
+            {
+                using var changeTenant = _currentTenant.Change(eventData.TenantId);
 
-            var providerType = _paymentServiceResolver.GetProviderTypeOrDefault(eventData.PaymentMethod) ??
+                var providerType = _paymentServiceResolver.GetProviderTypeOrDefault(eventData.PaymentMethod) ??
+                                   throw new UnknownPaymentMethodException(eventData.PaymentMethod);
+
+                var provider = _serviceProvider.GetService(providerType) as IPaymentServiceProvider ??
                                throw new UnknownPaymentMethodException(eventData.PaymentMethod);
 
-            var provider = _serviceProvider.GetService(providerType) as IPaymentServiceProvider ??
-                           throw new UnknownPaymentMethodException(eventData.PaymentMethod);
+                var paymentItems = eventData.PaymentItems.Select(itemEto =>
+                    {
+                        var item = new PaymentItem(_guidGenerator.Create(), itemEto.ItemType, itemEto.ItemKey,
+                            itemEto.OriginalPaymentAmount);
 
-            var paymentItems = eventData.PaymentItems.Select(itemEto =>
+                        itemEto.MapExtraPropertiesTo(item, MappingPropertyDefinitionChecks.None);
+
+                        return item;
+                    }
+                ).ToList();
+
+                if (await HasDuplicatePaymentItemInProgressAsync(paymentItems))
                 {
-                    var item = new PaymentItem(_guidGenerator.Create(), itemEto.ItemType, itemEto.ItemKey,
-                        itemEto.OriginalPaymentAmount);
-
-                    itemEto.MapExtraPropertiesTo(item, MappingPropertyDefinitionChecks.None);
-
-                    return item;
+                    throw new DuplicatePaymentRequestException();
                 }
-            ).ToList();
 
-            if (await HasDuplicatePaymentItemInProgressAsync(paymentItems))
-            {
-                throw new DuplicatePaymentRequestException();
+                var payment = new Payment(_guidGenerator.Create(), eventData.TenantId, eventData.UserId,
+                    eventData.PaymentMethod, eventData.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
+                    paymentItems);
+
+                eventData.MapExtraPropertiesTo(payment, MappingPropertyDefinitionChecks.None);
+
+                await _paymentRepository.InsertAsync(payment, autoSave: true);
             }
-
-            var payment = new Payment(_guidGenerator.Create(), eventData.TenantId, eventData.UserId,
-                eventData.PaymentMethod, eventData.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
-                paymentItems);
-
-            eventData.MapExtraPropertiesTo(payment, MappingPropertyDefinitionChecks.None);
-
-            await _paymentRepository.InsertAsync(payment, autoSave: true);
+            catch { };
         }
         
         protected virtual async Task<bool> HasDuplicatePaymentItemInProgressAsync(IEnumerable<PaymentItem> paymentItems)

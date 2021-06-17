@@ -24,11 +24,15 @@ namespace EasyAbp.PaymentService.Payments
         [UnitOfWork(true)]
         public virtual async Task HandleEventAsync(CancelPaymentEto eventData)
         {
-            using var changeTenant = _currentTenant.Change(eventData.TenantId);
-            
-            var payment = await _paymentRepository.GetAsync(eventData.PaymentId);
-            
-            await _paymentManager.StartCancelAsync(payment);
+            try
+            {
+                using var changeTenant = _currentTenant.Change(eventData.TenantId);
+
+                var payment = await _paymentRepository.GetAsync(eventData.PaymentId);
+
+                await _paymentManager.StartCancelAsync(payment);
+            }
+            catch { };
         }
     }
 }
