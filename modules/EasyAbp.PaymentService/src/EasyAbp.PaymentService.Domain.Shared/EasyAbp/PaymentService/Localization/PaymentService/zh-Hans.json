@@ -44,6 +44,15 @@
     "PaymentItemPaymentDiscount": "支付折扣",
     "PaymentItemActualPaymentAmount": "实际支付金额",
     "PaymentItemRefundAmount": "退款总额",
-    "PaymentItemPendingRefundAmount": "进行中的退款金额"
+    "PaymentItemPendingRefundAmount": "进行中的退款金额",
+    "Permission:PaymentService": "支付总服务管理",
+    "Permission:Payment": "付款",
+    "Permission:Manage": "管理",
+    "Permission:CrossStore": "跨店铺",
+    "Permission:Create": "创建",
+    "Permission:Refund": "退款",
+    "Permission:WithdrawalRecord": "提现记录",
+    "Permission:Update": "编辑",
+    "Permission:Delete": "删除"
   }
 }
