@@ -1,0 +1,19 @@
+{
+  "culture": "ar",
+  "texts": {
+    "MyAccount": "إدارة ملفى",
+    "SamplePageMessage": "صفحة نموذجية للوحدة النمطية Installment",
+    "Permission:InstallmentRecord": "InstallmentRecord",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:InstallmentRecord": "MenuInstallmentRecord",
+    "InstallmentRecord": "InstallmentRecord",
+    "InstallmentRecordPaymentId": "InstallmentRecordPaymentId",
+    "InstallmentRecordPaymentAmount": "InstallmentRecordPaymentAmount",
+    "CreateInstallmentRecord": "CreateInstallmentRecord",
+    "EditInstallmentRecord": "EditInstallmentRecord",
+    "InstallmentRecordDeletionConfirmationMessage": "Are you sure to delete the installmentRecord {0}?",
+    "SuccessfullyDeleted": "Successfully deleted"
+  }
+}

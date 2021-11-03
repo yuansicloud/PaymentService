@@ -1,0 +1,18 @@
+{
+  "culture": "zh-Hant",
+  "texts": {
+    "MyAccount": "我的賬戶",
+    "Permission:InstallmentRecord": "InstallmentRecord",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:InstallmentRecord": "MenuInstallmentRecord",
+    "InstallmentRecord": "InstallmentRecord",
+    "InstallmentRecordPaymentId": "InstallmentRecordPaymentId",
+    "InstallmentRecordPaymentAmount": "InstallmentRecordPaymentAmount",
+    "CreateInstallmentRecord": "CreateInstallmentRecord",
+    "EditInstallmentRecord": "EditInstallmentRecord",
+    "InstallmentRecordDeletionConfirmationMessage": "Are you sure to delete the installmentRecord {0}?",
+    "SuccessfullyDeleted": "Successfully deleted"
+  }
+}
