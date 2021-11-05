@@ -3,6 +3,7 @@ using EasyAbp.PaymentService.Installment.Permissions;
 using EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using System.Threading.Tasks;
 
 namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 {
@@ -16,10 +17,21 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
         protected override string DeletePolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Delete;
 
         private readonly IInstallmentRecordRepository _repository;
-        
-        public InstallmentRecordAppService(IInstallmentRecordRepository repository) : base(repository)
+
+        private readonly IInstallmentPaymentManager _installmentPaymentManager;
+
+        public InstallmentRecordAppService(
+            IInstallmentRecordRepository repository, 
+            IInstallmentPaymentManager installmentPaymentManager) : base(repository)
         {
             _repository = repository;
+            _installmentPaymentManager = installmentPaymentManager;
         }
+
+        public override async Task<InstallmentRecordDto> CreateAsync(CreateInstallmentRecordDto input)
+        {
+            return await MapToGetOutputDtoAsync(await _installmentPaymentManager.CreateInstallment(input.PaymentId, input.PaymentAmount));
+        }
+
     }
 }
