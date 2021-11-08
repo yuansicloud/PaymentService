@@ -6,19 +6,19 @@ using Volo.Abp.Application;
 namespace EasyAbp.PaymentService.Installment
 {
     [DependsOn(
-        typeof(InstallmentDomainModule),
-        typeof(InstallmentApplicationContractsModule),
+        typeof(PaymentServiceInstallmentDomainModule),
+        typeof(PaymentServiceInstallmentApplicationContractsModule),
         typeof(AbpDddApplicationModule),
         typeof(AbpAutoMapperModule)
         )]
-    public class InstallmentApplicationModule : AbpModule
+    public class PaymentServiceInstallmentApplicationModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAutoMapperObjectMapper<InstallmentApplicationModule>();
+            context.Services.AddAutoMapperObjectMapper<PaymentServiceInstallmentApplicationModule>();
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddMaps<InstallmentApplicationModule>(validate: true);
+                options.AddMaps<PaymentServiceInstallmentApplicationModule>(validate: true);
             });
         }
     }

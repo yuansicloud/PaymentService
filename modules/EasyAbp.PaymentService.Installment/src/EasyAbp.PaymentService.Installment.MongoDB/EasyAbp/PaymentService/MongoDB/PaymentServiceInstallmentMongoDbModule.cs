@@ -5,10 +5,10 @@ using Volo.Abp.MongoDB;
 namespace EasyAbp.PaymentService.Installment.MongoDB
 {
     [DependsOn(
-        typeof(InstallmentDomainModule),
+        typeof(PaymentServiceInstallmentDomainModule),
         typeof(AbpMongoDbModule)
         )]
-    public class InstallmentMongoDbModule : AbpModule
+    public class PaymentServiceInstallmentMongoDbModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {

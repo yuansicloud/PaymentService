@@ -11,13 +11,13 @@ namespace EasyAbp.PaymentService.Installment
     [DependsOn(
         typeof(AbpValidationModule)
     )]
-    public class InstallmentDomainSharedModule : AbpModule
+    public class PaymentServiceInstallmentDomainSharedModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<InstallmentDomainSharedModule>();
+                options.FileSets.AddEmbedded<PaymentServiceInstallmentDomainSharedModule>();
             });
 
             Configure<AbpLocalizationOptions>(options =>

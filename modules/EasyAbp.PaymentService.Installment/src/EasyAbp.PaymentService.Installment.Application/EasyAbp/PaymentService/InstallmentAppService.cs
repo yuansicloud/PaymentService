@@ -8,7 +8,7 @@ namespace EasyAbp.PaymentService.Installment
         protected InstallmentAppService()
         {
             LocalizationResource = typeof(InstallmentResource);
-            ObjectMapperContext = typeof(InstallmentApplicationModule);
+            ObjectMapperContext = typeof(PaymentServiceInstallmentApplicationModule);
         }
     }
 }

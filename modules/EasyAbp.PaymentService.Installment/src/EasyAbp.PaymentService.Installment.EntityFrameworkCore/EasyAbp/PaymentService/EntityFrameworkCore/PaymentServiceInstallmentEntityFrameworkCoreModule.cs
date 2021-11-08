@@ -6,10 +6,10 @@ using Volo.Abp.Modularity;
 namespace EasyAbp.PaymentService.Installment.EntityFrameworkCore
 {
     [DependsOn(
-        typeof(InstallmentDomainModule),
+        typeof(PaymentServiceInstallmentDomainModule),
         typeof(AbpEntityFrameworkCoreModule)
     )]
-    public class InstallmentEntityFrameworkCoreModule : AbpModule
+    public class PaymentServiceInstallmentEntityFrameworkCoreModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {

@@ -5,9 +5,9 @@ namespace EasyAbp.PaymentService.Installment
 {
     [DependsOn(
         typeof(AbpDddDomainModule),
-        typeof(InstallmentDomainSharedModule)
+        typeof(PaymentServiceInstallmentDomainSharedModule)
     )]
-    public class InstallmentDomainModule : AbpModule
+    public class PaymentServiceInstallmentDomainModule : AbpModule
     {
 
     }

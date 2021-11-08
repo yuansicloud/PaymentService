@@ -5,16 +5,16 @@ using Volo.Abp.Modularity;
 namespace EasyAbp.PaymentService.Installment
 {
     [DependsOn(
-        typeof(InstallmentApplicationContractsModule),
+        typeof(PaymentServiceInstallmentApplicationContractsModule),
         typeof(AbpHttpClientModule))]
-    public class InstallmentHttpApiClientModule : AbpModule
+    public class PaymentServiceInstallmentHttpApiClientModule : AbpModule
     {
         public const string RemoteServiceName = "Installment";
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddHttpClientProxies(
-                typeof(InstallmentApplicationContractsModule).Assembly,
+                typeof(PaymentServiceInstallmentApplicationContractsModule).Assembly,
                 RemoteServiceName
             );
         }

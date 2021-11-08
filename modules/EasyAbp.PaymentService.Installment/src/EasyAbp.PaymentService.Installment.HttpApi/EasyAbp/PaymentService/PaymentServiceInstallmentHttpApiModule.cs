@@ -8,15 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 namespace EasyAbp.PaymentService.Installment
 {
     [DependsOn(
-        typeof(InstallmentApplicationContractsModule),
+        typeof(PaymentServiceInstallmentApplicationContractsModule),
         typeof(AbpAspNetCoreMvcModule))]
-    public class InstallmentHttpApiModule : AbpModule
+    public class PaymentServiceInstallmentHttpApiModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
             PreConfigure<IMvcBuilder>(mvcBuilder =>
             {
-                mvcBuilder.AddApplicationPartIfNotExists(typeof(InstallmentHttpApiModule).Assembly);
+                mvcBuilder.AddApplicationPartIfNotExists(typeof(PaymentServiceInstallmentHttpApiModule).Assembly);
             });
         }
 

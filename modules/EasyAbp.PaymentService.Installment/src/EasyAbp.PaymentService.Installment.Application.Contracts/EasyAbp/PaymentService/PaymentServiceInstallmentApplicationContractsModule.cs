@@ -5,11 +5,11 @@ using Volo.Abp.Authorization;
 namespace EasyAbp.PaymentService.Installment
 {
     [DependsOn(
-        typeof(InstallmentDomainSharedModule),
+        typeof(PaymentServiceInstallmentDomainSharedModule),
         typeof(AbpDddApplicationContractsModule),
         typeof(AbpAuthorizationModule)
         )]
-    public class InstallmentApplicationContractsModule : AbpModule
+    public class PaymentServiceInstallmentApplicationContractsModule : AbpModule
     {
 
     }
