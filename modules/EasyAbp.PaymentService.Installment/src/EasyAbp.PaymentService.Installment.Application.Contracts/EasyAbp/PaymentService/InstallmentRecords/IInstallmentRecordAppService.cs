@@ -9,7 +9,7 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
         ICrudAppService< 
             InstallmentRecordDto, 
             Guid, 
-            PagedAndSortedResultRequestDto,
+            GetInstallmentListInput,
             CreateInstallmentRecordDto,
             UpdateInstallmentRecordDto>
     {

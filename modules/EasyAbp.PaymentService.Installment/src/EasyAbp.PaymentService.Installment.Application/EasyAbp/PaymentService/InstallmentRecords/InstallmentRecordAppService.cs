@@ -4,10 +4,11 @@ using EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 {
-    public class InstallmentRecordAppService : CrudAppService<InstallmentRecord, InstallmentRecordDto, Guid, PagedAndSortedResultRequestDto, CreateInstallmentRecordDto, UpdateInstallmentRecordDto>,
+    public class InstallmentRecordAppService : CrudAppService<InstallmentRecord, InstallmentRecordDto, Guid, GetInstallmentListInput, CreateInstallmentRecordDto, UpdateInstallmentRecordDto>,
         IInstallmentRecordAppService
     {
         protected override string GetPolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Default;
@@ -31,6 +32,15 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
         public override async Task<InstallmentRecordDto> CreateAsync(CreateInstallmentRecordDto input)
         {
             return await MapToGetOutputDtoAsync(await _installmentPaymentManager.CreateInstallment(input.PaymentId, input.PaymentAmount));
+        }
+
+        protected override async Task<IQueryable<InstallmentRecord>> CreateFilteredQueryAsync(GetInstallmentListInput input)
+        {
+            var query = await _repository.WithDetailsAsync();
+
+            query = query.WhereIf(input.PaymentId.HasValue, q => q.PaymentId == input.PaymentId.Value);
+
+            return query;
         }
 
     }

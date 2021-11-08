@@ -43,7 +43,7 @@ namespace EasyAbp.PaymentService.Installment.EasyAbp.PaymentService.InstallmentR
         }
 
         [HttpGet]
-        public Task<PagedResultDto<InstallmentRecordDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public Task<PagedResultDto<InstallmentRecordDto>> GetListAsync(GetInstallmentListInput input)
         {
             return _service.GetListAsync(input);
         }
