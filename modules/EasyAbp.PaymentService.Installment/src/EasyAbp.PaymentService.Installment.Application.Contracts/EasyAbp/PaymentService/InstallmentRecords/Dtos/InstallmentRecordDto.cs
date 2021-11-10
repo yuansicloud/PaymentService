@@ -9,5 +9,7 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos
         public Guid PaymentId { get; set; }
 
         public decimal PaymentAmount { get; set; }
+
+        public DateTime PaymentTime { get; set; }
     }
 }

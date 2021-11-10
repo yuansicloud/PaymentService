@@ -12,6 +12,7 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 
         public virtual decimal PaymentAmount { get; protected set; }
 
+        public virtual DateTime PaymentTime { get; protected set; }
 
         protected InstallmentRecord()
         {
@@ -21,12 +22,14 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
             Guid id,
             Guid? tenantId,
             Guid paymentId,
-            decimal paymentAmount
+            decimal paymentAmount,
+            DateTime paymentTime
         ) : base(id)
         {
             TenantId = tenantId;
             PaymentId = paymentId;
             PaymentAmount = paymentAmount;
+            PaymentTime = paymentTime;
         }
     }
 }

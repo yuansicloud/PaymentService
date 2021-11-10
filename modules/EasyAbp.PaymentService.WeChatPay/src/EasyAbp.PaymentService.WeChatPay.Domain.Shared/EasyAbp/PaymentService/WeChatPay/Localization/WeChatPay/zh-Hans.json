@@ -61,6 +61,9 @@
     "PaymentRecordTransactionId": "TransactionId",
     "PaymentRecordOutTradeNo": "OutTradeNo",
     "PaymentRecordAttach": "Attach",
-    "PaymentRecordTimeEnd": "TimeEnd"
+    "PaymentRecordTimeEnd": "TimeEnd",
+    "Permission:WechatPay": "微信支付",
+    "Permission:PaymentRecord": "支付记录",
+    "Permission:RefundRecord": "退款记录"
   }
 }

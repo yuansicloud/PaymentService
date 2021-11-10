@@ -11,5 +11,8 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos
 
         [DisplayName("InstallmentRecordPaymentAmount")]
         public decimal PaymentAmount { get; set; }
+
+        [DisplayName("InstallmentRecordPaymentTime")]
+        public DateTime PaymentTime { get; set; }
     }
 }
