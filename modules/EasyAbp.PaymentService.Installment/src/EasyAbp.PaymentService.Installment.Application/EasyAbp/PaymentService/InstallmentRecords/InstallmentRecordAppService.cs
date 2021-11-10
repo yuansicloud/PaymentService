@@ -31,14 +31,19 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 
         public override async Task<InstallmentRecordDto> CreateAsync(CreateInstallmentRecordDto input)
         {
-            return await MapToGetOutputDtoAsync(await _installmentPaymentManager.CreateInstallment(input.PaymentId, input.PaymentAmount));
+            return await MapToGetOutputDtoAsync(await _installmentPaymentManager.CreateInstallment(input.PaymentId, input.PaymentAmount, input.PaymentTime));
         }
 
         protected override async Task<IQueryable<InstallmentRecord>> CreateFilteredQueryAsync(GetInstallmentListInput input)
         {
             var query = await _repository.WithDetailsAsync();
 
-            query = query.WhereIf(input.PaymentId.HasValue, q => q.PaymentId == input.PaymentId.Value);
+            query = query
+                .WhereIf(input.PaymentId.HasValue, q => q.PaymentId == input.PaymentId.Value)
+                .WhereIf(input.MinCreationTime.HasValue, x => x.CreationTime >= input.MinCreationTime.Value)
+                .WhereIf(input.MaxCreationTime.HasValue, x => x.CreationTime <= input.MaxCreationTime.Value)
+                .WhereIf(input.MinPaymentTime.HasValue, x => x.PaymentTime >= input.MinPaymentTime.Value)
+                .WhereIf(input.MaxPaymentTime.HasValue, x => x.PaymentTime <= input.MaxPaymentTime.Value);
 
             return query;
         }

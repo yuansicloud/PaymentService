@@ -27,7 +27,7 @@ namespace EasyAbp.PaymentService.Installment
             _paymentManager = paymentManager;
         }
 
-        public async Task<InstallmentRecord> CreateInstallment(Guid paymentId, decimal amount)
+        public async Task<InstallmentRecord> CreateInstallment(Guid paymentId, decimal amount, DateTime paymentTime)
         {
             var payment = await _paymentRepository.GetAsync(paymentId);
 
@@ -45,7 +45,7 @@ namespace EasyAbp.PaymentService.Installment
                 throw new BusinessException();
             }
 
-            var record = await _installmentRecordRepository.InsertAsync(new InstallmentRecord(_guidGenerator.Create(), payment.TenantId, paymentId, amount), true);
+            var record = await _installmentRecordRepository.InsertAsync(new InstallmentRecord(_guidGenerator.Create(), payment.TenantId, paymentId, amount, paymentTime), true);
 
             if (currentPaidAmount + amount == payment.OriginalPaymentAmount)
             {
