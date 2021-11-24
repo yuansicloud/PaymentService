@@ -23,11 +23,12 @@ namespace EasyAbp.PaymentService.Installment
 
         private readonly ICurrentTenant _currentTenant;
 
-        public InstallmentPaymentServiceProvider(IPaymentRepository paymentRepository, IInstallmentRecordRepository installmentRecordRepository, IGuidGenerator guidGenerator)
+        public InstallmentPaymentServiceProvider(IPaymentRepository paymentRepository, IInstallmentRecordRepository installmentRecordRepository, IGuidGenerator guidGenerator, ICurrentTenant currentTenant)
         {
             _paymentRepository = paymentRepository;
             _installmentRecordRepository = installmentRecordRepository;
             _guidGenerator = guidGenerator;
+            _currentTenant = currentTenant;
         }
 
         public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
