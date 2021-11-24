@@ -15,7 +15,7 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 
         public override async Task<IQueryable<InstallmentRecord>> WithDetailsAsync()
         {
-            return (await base.WithDetailsAsync()).IncludeDetails();
+            return (await GetQueryableAsync()).IncludeDetails();
         }
     }
 }

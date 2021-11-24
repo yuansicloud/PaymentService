@@ -37,7 +37,7 @@ namespace EasyAbp.PaymentService.Installment
                 throw new UserFriendlyException("debt is less than paid amount!");
             }
 
-            installment.AddRepaymentRecord(new RepaymentRecords.RepaymentRecord(_guidGenerator.Create(), installment.Id, paymentAmount, paymentTime));
+            installment.AddRepaymentRecord(new RepaymentRecords.RepaymentRecord(_guidGenerator.Create(), installment.TenantId, paymentAmount, paymentTime));
 
             if (installment.DebtAmount() == 0)
             {
