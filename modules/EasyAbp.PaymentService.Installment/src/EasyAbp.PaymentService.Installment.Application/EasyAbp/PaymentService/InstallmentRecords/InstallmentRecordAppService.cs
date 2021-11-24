@@ -27,9 +27,9 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
             _installmentPaymentManager = installmentPaymentManager;
         }
 
-        public async Task<InstallmentRecordDto> GetByPaymentId(Guid paymentId)
+        public async Task<InstallmentRecordDto> GetByPaymentIdAsync(Guid paymentId)
         {
-            var installment = await _repository.SingleOrDefaultAsync(x => x.PaymentId == paymentId);
+            var installment = await _repository.FindAsync(x => x.PaymentId == paymentId);
 
             return await MapToGetOutputDtoAsync(installment);
         }
@@ -50,6 +50,17 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
             installment.RemoveRepaymentRecord(repayment);
 
             await _repository.UpdateAsync(installment);
+        }
+
+        public async Task<InstallmentRecordDto> CancelAsync(Guid id)
+        {
+            var installment = await _repository.GetAsync(id);
+
+            installment.CancelPayment(DateTime.Now);
+
+            await _repository.UpdateAsync(installment);
+
+            return await MapToGetOutputDtoAsync(installment);
         }
 
         protected override async Task<IQueryable<InstallmentRecord>> CreateFilteredQueryAsync(GetInstallmentListInput input)

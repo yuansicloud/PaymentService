@@ -44,6 +44,8 @@ namespace EasyAbp.PaymentService.Installment
                 var payment = await _paymentRepository.GetAsync(installment.PaymentId);
 
                 await _paymentManager.CompletePaymentAsync(payment);
+
+                installment.CompletePayment(paymentTime);
             }
 
             return installment;

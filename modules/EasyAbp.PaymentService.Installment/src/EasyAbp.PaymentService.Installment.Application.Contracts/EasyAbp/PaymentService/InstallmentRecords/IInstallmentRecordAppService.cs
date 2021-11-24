@@ -15,6 +15,8 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 
         Task RemoveRepaymentAsync(Guid id, RemoveRepaymentInput input);
 
-        Task<InstallmentRecordDto> GetByPaymentId(Guid paymentId);
+        Task<InstallmentRecordDto> GetByPaymentIdAsync(Guid paymentId);
+
+        Task<InstallmentRecordDto> CancelAsync(Guid id);
     }
 }

@@ -13,7 +13,7 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
             }
 
             return queryable
-                // .Include(x => x.xxx) // TODO: AbpHelper generated
+                 .Include(x => x.RepaymentRecords) // TODO: AbpHelper generated
                 ;
         }
     }

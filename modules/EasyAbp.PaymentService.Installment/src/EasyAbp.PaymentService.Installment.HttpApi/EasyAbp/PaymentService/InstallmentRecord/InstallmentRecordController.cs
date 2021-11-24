@@ -22,6 +22,13 @@ namespace EasyAbp.PaymentService.Installment.EasyAbp.PaymentService.InstallmentR
             _service = service;
         }
 
+        [Route("{id}/cancel")]
+        [HttpPost]
+        public Task<InstallmentRecordDto> CancelAsync(Guid id)
+        {
+            return _service.CancelAsync(id);
+        }
+
         [Route("{id}")]
         [HttpGet]
         public Task<InstallmentRecordDto> GetAsync(Guid id)
@@ -31,9 +38,9 @@ namespace EasyAbp.PaymentService.Installment.EasyAbp.PaymentService.InstallmentR
 
         [Route("by-payment/{paymentId}")]
         [HttpGet]
-        public Task<InstallmentRecordDto> GetByPaymentId(Guid paymentId)
+        public Task<InstallmentRecordDto> GetByPaymentIdAsync(Guid paymentId)
         {
-            return _service.GetByPaymentId(paymentId);
+            return _service.GetByPaymentIdAsync(paymentId);
         }
 
         [HttpGet]
