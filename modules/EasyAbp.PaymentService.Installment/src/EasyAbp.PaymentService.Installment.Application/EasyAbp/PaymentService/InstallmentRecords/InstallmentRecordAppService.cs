@@ -5,33 +5,51 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using System.Threading.Tasks;
 using System.Linq;
+using Volo.Abp.Domain.Repositories;
 
 namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 {
-    public class InstallmentRecordAppService : CrudAppService<InstallmentRecord, InstallmentRecordDto, Guid, GetInstallmentListInput, CreateInstallmentRecordDto, UpdateInstallmentRecordDto>,
+    public class InstallmentRecordAppService : ReadOnlyAppService<InstallmentRecord, InstallmentRecordDto, Guid, GetInstallmentListInput>,
         IInstallmentRecordAppService
     {
         protected override string GetPolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Default;
         protected override string GetListPolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Default;
-        protected override string CreatePolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Create;
-        protected override string UpdatePolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Update;
-        protected override string DeletePolicyName { get; set; } = InstallmentPermissions.InstallmentRecord.Delete;
 
         private readonly IInstallmentRecordRepository _repository;
 
-        private readonly IInstallmentPaymentManager _installmentPaymentManager;
+        private readonly InstallmentPaymentManager _installmentPaymentManager;
 
         public InstallmentRecordAppService(
             IInstallmentRecordRepository repository, 
-            IInstallmentPaymentManager installmentPaymentManager) : base(repository)
+            InstallmentPaymentManager installmentPaymentManager) : base(repository)
         {
             _repository = repository;
             _installmentPaymentManager = installmentPaymentManager;
         }
 
-        public override async Task<InstallmentRecordDto> CreateAsync(CreateInstallmentRecordDto input)
+        public async Task<InstallmentRecordDto> GetByPaymentId(Guid paymentId)
         {
-            return await MapToGetOutputDtoAsync(await _installmentPaymentManager.CreateInstallment(input.PaymentId, input.PaymentAmount, input.PaymentTime));
+            var installment = await _repository.SingleOrDefaultAsync(x => x.PaymentId == paymentId);
+
+            return await MapToGetOutputDtoAsync(installment);
+        }
+
+        public async Task RepayAsync(Guid id, RepayInput input)
+        {
+            var installment = await _repository.GetAsync(id);
+
+            await _installmentPaymentManager.RepayAsync(installment, input.PaymentAmount, input.PaymentTime);
+        }
+
+        public async Task RemoveRepaymentAsync(Guid id, RemoveRepaymentInput input)
+        {
+            var installment = await _repository.GetAsync(id);
+
+            var repayment = installment.GetRepayment(input.RepaymentId);
+
+            installment.RemoveRepaymentRecord(repayment);
+
+            await _repository.UpdateAsync(installment);
         }
 
         protected override async Task<IQueryable<InstallmentRecord>> CreateFilteredQueryAsync(GetInstallmentListInput input)
@@ -43,7 +61,10 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords
                 .WhereIf(input.MinCreationTime.HasValue, x => x.CreationTime >= input.MinCreationTime.Value)
                 .WhereIf(input.MaxCreationTime.HasValue, x => x.CreationTime <= input.MaxCreationTime.Value)
                 .WhereIf(input.MinPaymentTime.HasValue, x => x.PaymentTime >= input.MinPaymentTime.Value)
-                .WhereIf(input.MaxPaymentTime.HasValue, x => x.PaymentTime <= input.MaxPaymentTime.Value);
+                .WhereIf(input.MaxPaymentTime.HasValue, x => x.PaymentTime <= input.MaxPaymentTime.Value)
+                .WhereIf(input.UserId.HasValue, x => x.UserId == input.UserId.Value)
+                .WhereIf(input.MinActualPaymentAmount.HasValue, x => x.ActualPaymentAmount >= input.MinActualPaymentAmount.Value)
+                .WhereIf(input.MaxActualPaymentAmount.HasValue, x => x.ActualPaymentAmount <= input.MaxActualPaymentAmount.Value);
 
             return query;
         }

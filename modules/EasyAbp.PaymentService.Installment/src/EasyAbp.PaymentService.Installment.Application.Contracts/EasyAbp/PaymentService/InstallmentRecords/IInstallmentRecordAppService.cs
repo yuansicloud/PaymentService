@@ -1,18 +1,20 @@
-using System;
 using EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos;
-using Volo.Abp.Application.Dtos;
+using System;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 
 namespace EasyAbp.PaymentService.Installment.InstallmentRecords
 {
     public interface IInstallmentRecordAppService :
-        ICrudAppService< 
+        IReadOnlyAppService< 
             InstallmentRecordDto, 
             Guid, 
-            GetInstallmentListInput,
-            CreateInstallmentRecordDto,
-            UpdateInstallmentRecordDto>
+            GetInstallmentListInput>
     {
+        Task RepayAsync(Guid id, RepayInput input);
 
+        Task RemoveRepaymentAsync(Guid id, RemoveRepaymentInput input);
+
+        Task<InstallmentRecordDto> GetByPaymentId(Guid paymentId);
     }
 }

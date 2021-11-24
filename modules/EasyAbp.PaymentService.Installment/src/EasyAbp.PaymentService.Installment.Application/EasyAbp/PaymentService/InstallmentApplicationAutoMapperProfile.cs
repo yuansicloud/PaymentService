@@ -1,6 +1,7 @@
 using EasyAbp.PaymentService.Installment.InstallmentRecords;
 using EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos;
 using AutoMapper;
+using EasyAbp.PaymentService.Installment.RepaymentRecords;
 
 namespace EasyAbp.PaymentService.Installment
 {
@@ -12,8 +13,7 @@ namespace EasyAbp.PaymentService.Installment
              * Alternatively, you can split your mapping configurations
              * into multiple profile classes for a better organization. */
             CreateMap<InstallmentRecord, InstallmentRecordDto>();
-            CreateMap<CreateInstallmentRecordDto, InstallmentRecord>(MemberList.Source);
-            CreateMap<UpdateInstallmentRecordDto, InstallmentRecord>(MemberList.Source);
+            CreateMap<RepaymentRecord, RepaymentRecordDto>();
         }
     }
 }

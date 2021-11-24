@@ -14,5 +14,11 @@ namespace EasyAbp.PaymentService.Installment.InstallmentRecords.Dtos
         public DateTime? MaxPaymentTime { get; set; }
 
         public DateTime? MinPaymentTime { get; set; }
+
+        public Guid? UserId { get; set; }
+
+        public decimal? MinActualPaymentAmount { get; set;  }
+
+        public decimal? MaxActualPaymentAmount {  get; set; }
     }
 }

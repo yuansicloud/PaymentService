@@ -1,9 +1,13 @@
-﻿using EasyAbp.PaymentService.Payments;
+﻿using EasyAbp.PaymentService.Installment.InstallmentRecords;
+using EasyAbp.PaymentService.Payments;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Data;
+using Volo.Abp.Guids;
+using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Installment
 {
@@ -13,9 +17,17 @@ namespace EasyAbp.PaymentService.Installment
 
         private readonly IPaymentRepository _paymentRepository;
 
-        public InstallmentPaymentServiceProvider(IPaymentRepository paymentRepository)
+        private readonly IInstallmentRecordRepository _installmentRecordRepository;
+
+        private readonly IGuidGenerator _guidGenerator;
+
+        private readonly ICurrentTenant _currentTenant;
+
+        public InstallmentPaymentServiceProvider(IPaymentRepository paymentRepository, IInstallmentRecordRepository installmentRecordRepository, IGuidGenerator guidGenerator)
         {
             _paymentRepository = paymentRepository;
+            _installmentRecordRepository = installmentRecordRepository;
+            _guidGenerator = guidGenerator;
         }
 
         public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
@@ -30,7 +42,15 @@ namespace EasyAbp.PaymentService.Installment
                 throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
             }
 
-            //await _paymentRepository.UpdateAsync(payment, true);
+            var paymentTime = configurations.GetOrDefault("PaymentTime") as DateTime? ??
+                               DateTime.Now;
+
+            if (await _installmentRecordRepository.FindAsync(x => x.PaymentId == payment.Id) != null)
+            {
+                throw new UserFriendlyException("Payment already started");
+            }
+
+            await _installmentRecordRepository.InsertAsync(new InstallmentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id, payment.ActualPaymentAmount, 0, payment.ActualPaymentAmount, paymentTime, payment.UserId));
         }
     }
 }

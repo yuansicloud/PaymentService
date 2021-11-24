@@ -1,3 +1,4 @@
+using EasyAbp.PaymentService.Installment.RepaymentRecords;
 using EasyAbp.PaymentService.Installment.InstallmentRecords;
 using System;
 using Microsoft.EntityFrameworkCore;
@@ -45,8 +46,18 @@ namespace EasyAbp.PaymentService.Installment.EntityFrameworkCore
             builder.Entity<InstallmentRecord>(b =>
             {
                 b.ToTable(options.TablePrefix + "InstallmentRecords", options.Schema);
-                b.ConfigureByConvention(); 
-                
+                b.ConfigureByConvention();
+
+
+                /* Configure more properties here */
+                b.HasIndex(x => x.PaymentId);
+            });
+
+
+            builder.Entity<RepaymentRecord>(b =>
+            {
+                b.ToTable(options.TablePrefix + "RepaymentRecords", options.Schema);
+                b.ConfigureByConvention();
 
                 /* Configure more properties here */
             });

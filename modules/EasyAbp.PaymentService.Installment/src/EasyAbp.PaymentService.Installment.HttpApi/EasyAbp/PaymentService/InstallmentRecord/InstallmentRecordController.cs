@@ -22,24 +22,18 @@ namespace EasyAbp.PaymentService.Installment.EasyAbp.PaymentService.InstallmentR
             _service = service;
         }
 
-        [HttpPost]
-        public Task<InstallmentRecordDto> CreateAsync(CreateInstallmentRecordDto input)
-        {
-            return _service.CreateAsync(input);
-        }
-
-        [Route("{id}")]
-        [HttpDelete]
-        public Task DeleteAsync(Guid id)
-        {
-            return _service.DeleteAsync(id);
-        }
-
         [Route("{id}")]
         [HttpGet]
         public Task<InstallmentRecordDto> GetAsync(Guid id)
         {
             return _service.GetAsync(id);
+        }
+
+        [Route("by-payment/{paymentId}")]
+        [HttpGet]
+        public Task<InstallmentRecordDto> GetByPaymentId(Guid paymentId)
+        {
+            return _service.GetByPaymentId(paymentId);
         }
 
         [HttpGet]
@@ -48,11 +42,18 @@ namespace EasyAbp.PaymentService.Installment.EasyAbp.PaymentService.InstallmentR
             return _service.GetListAsync(input);
         }
 
-        [HttpPut]
-        [Route("id")]
-        public Task<InstallmentRecordDto> UpdateAsync(Guid id, UpdateInstallmentRecordDto input)
+        [Route("{id}/remove-repayment")]
+        [HttpPost]
+        public Task RemoveRepaymentAsync(Guid id, RemoveRepaymentInput input)
         {
-            return _service.UpdateAsync(id, input);
+            return _service.RemoveRepaymentAsync(id, input);
+        }
+
+        [Route("{id}/repay")]
+        [HttpPost]
+        public Task RepayAsync(Guid id, RepayInput input)
+        {
+            return _service.RepayAsync(id, input);
         }
     }
 }
