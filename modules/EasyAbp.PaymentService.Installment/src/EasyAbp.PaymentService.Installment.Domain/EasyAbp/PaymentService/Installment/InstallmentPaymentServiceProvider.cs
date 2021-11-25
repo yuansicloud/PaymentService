@@ -1,5 +1,6 @@
 ﻿using EasyAbp.PaymentService.Installment.InstallmentRecords;
 using EasyAbp.PaymentService.Payments;
+using EasyAbp.PaymentService.Refunds;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,12 +24,15 @@ namespace EasyAbp.PaymentService.Installment
 
         private readonly ICurrentTenant _currentTenant;
 
-        public InstallmentPaymentServiceProvider(IPaymentRepository paymentRepository, IInstallmentRecordRepository installmentRecordRepository, IGuidGenerator guidGenerator, ICurrentTenant currentTenant)
+        private readonly IPaymentManager _paymentManager;
+
+        public InstallmentPaymentServiceProvider(IPaymentRepository paymentRepository, IInstallmentRecordRepository installmentRecordRepository, IGuidGenerator guidGenerator, ICurrentTenant currentTenant, IPaymentManager paymentManager)
         {
             _paymentRepository = paymentRepository;
             _installmentRecordRepository = installmentRecordRepository;
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
+            _paymentManager = paymentManager;
         }
 
         public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
@@ -52,6 +56,27 @@ namespace EasyAbp.PaymentService.Installment
             }
 
             await _installmentRecordRepository.InsertAsync(new InstallmentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id, payment.ActualPaymentAmount, 0, payment.ActualPaymentAmount, paymentTime, payment.UserId));
+        }
+
+        public override async Task OnCancelStartedAsync(Payment payment)
+        {
+            var installment = await _installmentRecordRepository.FindAsync(x => x.PaymentId == payment.Id);
+
+            if (installment == null)
+            {
+                throw new UserFriendlyException("Installment not exist");
+            }
+
+            installment.CancelPayment(DateTime.Now);
+
+            await _installmentRecordRepository.UpdateAsync(installment);
+
+            await _paymentManager.CompleteCancelAsync(payment);
+        }
+
+        public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
+        {
+            await _paymentManager.CompleteRefundAsync(payment, refund);
         }
     }
 }
