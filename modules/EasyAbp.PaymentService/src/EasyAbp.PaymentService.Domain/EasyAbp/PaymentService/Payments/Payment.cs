@@ -87,6 +87,26 @@ namespace EasyAbp.PaymentService.Payments
             ActualPaymentAmount = (OriginalPaymentAmount - paymentDiscount).EnsureIsNonNegative();
         }
 
+        public void SetCompletionTime(DateTime completionTime)
+        {
+            if (!CompletionTime.HasValue)
+            {
+                throw new PaymentIsInUnexpectedStageException(Id);
+            }
+
+            CompletionTime = completionTime;
+        }
+
+        public void SetCanceledTime(DateTime canceledTime)
+        {
+            if (!CanceledTime.HasValue)
+            {
+                throw new PaymentIsInUnexpectedStageException(Id);
+            }
+
+            CanceledTime = canceledTime;
+        }
+
         public void CompletePayment(DateTime completionTime)
         {
             CheckIsInProgress();
