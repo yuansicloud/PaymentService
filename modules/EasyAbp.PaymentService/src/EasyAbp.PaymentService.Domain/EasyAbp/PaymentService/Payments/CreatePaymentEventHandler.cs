@@ -46,14 +46,15 @@ namespace EasyAbp.PaymentService.Payments
                                throw new UnknownPaymentMethodException(eventData.PaymentMethod);
 
                 var paymentItems = eventData.PaymentItems.Select(itemEto =>
-                    {
-                        var item = new PaymentItem(_guidGenerator.Create(), itemEto.ItemType, itemEto.ItemKey,
-                            itemEto.OriginalPaymentAmount);
+                {
+                    var item = new PaymentItem(_guidGenerator.Create(), itemEto.ItemType, itemEto.ItemKey,
+                        itemEto.OriginalPaymentAmount);
 
-                        itemEto.MapExtraPropertiesTo(item, MappingPropertyDefinitionChecks.None);
+                    // Map extra properties including any discount info
+                    itemEto.MapExtraPropertiesTo(item, MappingPropertyDefinitionChecks.None);
 
-                        return item;
-                    }
+                    return item;
+                }
                 ).ToList();
 
                 if (await HasDuplicatePaymentItemInProgressAsync(paymentItems))
@@ -61,9 +62,19 @@ namespace EasyAbp.PaymentService.Payments
                     throw new DuplicatePaymentRequestException();
                 }
 
+                var originalTotalAmount = paymentItems.Select(item => item.OriginalPaymentAmount).Sum();
                 var payment = new Payment(_guidGenerator.Create(), eventData.TenantId, eventData.UserId,
-                    eventData.PaymentMethod, eventData.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
-                    paymentItems);
+                    eventData.PaymentMethod, eventData.Currency, originalTotalAmount, paymentItems);
+
+                foreach (var paymentItem in paymentItems)
+                {
+                    // Extract and apply discount if present
+                    if (paymentItem.ExtraProperties.ContainsKey("PaymentDiscount") && decimal.TryParse(paymentItem.ExtraProperties["PaymentDiscount"].ToString(), out var discountAmount))
+                    {
+                        payment.SetPaymentDiscount(paymentItem, discountAmount);
+                    }
+                }
+
 
                 eventData.MapExtraPropertiesTo(payment, MappingPropertyDefinitionChecks.None);
 
