@@ -84,7 +84,7 @@ namespace EasyAbp.PaymentService.Payments
             paymentItem.SetPaymentDiscount(paymentDiscount);
             
             PaymentDiscount = PaymentItems.Sum(item => item.PaymentDiscount).EnsureIsNonNegative();
-            ActualPaymentAmount = (OriginalPaymentAmount - paymentDiscount).EnsureIsNonNegative();
+            ActualPaymentAmount = (OriginalPaymentAmount - PaymentDiscount).EnsureIsNonNegative();
         }
 
         public void SetCompletionTime(DateTime completionTime)
